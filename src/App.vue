@@ -49,6 +49,15 @@ export default {
     },
   },
   created() {
+    this.$watch(
+      '$i18n.locale',
+      (locale) => {
+        const tableLocales = { zh: 'zh-CN', 'zh-TW': 'zh-TW' };
+        $.fn.bootstrapTable.defaults.locale = tableLocales[locale] || 'en-US';
+      },
+      { immediate: true },
+    );
+
     const setAuthHeader = (token) => {
       if (token) {
         $.ajaxSettings.headers['Authorization'] =
@@ -178,7 +187,10 @@ export default {
           contentType.includes('application/json') &&
           Array.isArray(error.response.data) &&
           error.response.data.length > 0 &&
-          error.response.data[0].hasOwnProperty('invalidValue')
+          Object.prototype.hasOwnProperty.call(
+            error.response.data[0],
+            'invalidValue',
+          )
         ) {
           let validationError = error.response.data
             .map((failure) => `${failure.path}: ${failure.message}`)

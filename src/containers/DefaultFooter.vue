@@ -1,12 +1,10 @@
 <template>
   <TheFooter>
-    <div>
-      <!-- left side here -->
-    </div>
+    <span class="qz-footer-name">{{ brand.platformName }}</span>
     <div class="ml-auto">
-      <a href="#" v-b-modal.aboutModal>{{ dtrack.application }}</a
-      >&nbsp;
-      <span class="mr-1">v{{ dtrack.version }}</span>
+      <b-button variant="link" class="qz-about-button" v-b-modal.aboutModal>
+        {{ $t('message.about') }} <span>v{{ $version.version }}</span>
+      </b-button>
     </div>
     <about-modal />
   </TheFooter>
@@ -14,11 +12,11 @@
 <script>
 import AboutModal from '../views/components/AboutModal';
 import { Footer as TheFooter } from '@coreui/vue';
-import globalVarsMixin from '../mixins/globalVarsMixin';
+import brand from '@/qingzhui/brand';
 
 export default {
   name: 'DefaultFooter',
-  mixins: [globalVarsMixin],
+  data: () => ({ brand }),
   components: {
     AboutModal,
     TheFooter,
@@ -27,7 +25,7 @@ export default {
 </script>
 <style scoped>
 footer {
-  flex: 0 0 24px;
+  flex: 0 0 36px;
   font-size: 85%;
 }
 </style>

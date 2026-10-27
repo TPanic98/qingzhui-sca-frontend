@@ -1,15 +1,10 @@
 <template>
-  <AppHeader fixed>
+  <AppHeader fixed class="qz-app-header">
     <SidebarToggler class="d-lg-none" display="md" mobile />
-    <img
-      class="d-lg-inline d-md-none d-sm-none bv-d-xs-down-none"
-      style="margin-left: 10px"
-      src="@/assets/img/brand/dt-logo-symbol.svg"
-      width="30"
-      height="30"
-      alt="Dependency-Track Logo"
-    />
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
+    <router-link to="/dashboard" class="qz-header-brand">
+      <QingzhuiBrand />
+    </router-link>
     <b-navbar-nav class="ml-auto">
       <DefaultHeaderProfileDropdown />
     </b-navbar-nav>
@@ -18,6 +13,7 @@
 <script>
 import { Header as AppHeader, SidebarToggler } from '@coreui/vue';
 import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
+import QingzhuiBrand from '@/qingzhui/Brand.vue';
 
 export default {
   name: 'DefaultHeader',
@@ -25,6 +21,7 @@ export default {
     AppHeader,
     DefaultHeaderProfileDropdown,
     SidebarToggler,
+    QingzhuiBrand,
   },
 };
 </script>

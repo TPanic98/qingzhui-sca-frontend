@@ -6,7 +6,9 @@
     no-stacking
     :title="$t('message.about')"
   >
-    <b-row>
+    <h2 class="qz-about-title">{{ brand.platformName }}</h2>
+    <p>{{ brand.description }}</p>
+    <b-row class="qz-upstream-brand">
       <b-col>
         <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
       </b-col>
@@ -122,10 +124,12 @@
 <script>
 import common from '../../shared/common';
 import globalVarsMixin from '../../mixins/globalVarsMixin';
+import brand from '@/qingzhui/brand';
 
 export default {
   name: 'AboutModal',
   mixins: [globalVarsMixin],
+  data: () => ({ brand }),
   computed: {
     serverTimestamp: function () {
       return common.formatTimestamp(this.dtrack.timestamp, true);

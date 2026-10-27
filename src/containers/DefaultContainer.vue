@@ -98,7 +98,7 @@ export default {
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
-          name: 'Tags',
+          name: this.$t('message.tags'),
           url: '/tags',
           icon: 'fa fa-tag',
           permission: permissions.VIEW_PORTFOLIO,

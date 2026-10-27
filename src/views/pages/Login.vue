@@ -1,102 +1,106 @@
 <template>
-  <div class="app flex-row align-items-center">
-    <div class="container">
-      <b-row class="justify-content-center">
-        <b-col md="8">
-          <b-card v-if="isWelcomeMessage" no-body class="bg-grey-900 p-4 m-0">
-            <div>
-              <p><span v-html="welcomeMessage" /></p>
-            </div>
-          </b-card>
-          <b-card-group>
-            <b-card no-body class="p-4">
-              <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
-                  <b-form @submit.prevent.stop="passes(login)">
-                    <h1>{{ $t('message.login') }}</h1>
-                    <p class="text-muted">{{ $t('message.login_desc') }}</p>
-                    <b-validated-input-group-form-input
-                      id="username"
-                      :label="$t('message.username')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-user"
-                      type="text"
-                      autocomplete="username email"
-                      v-model="input.username"
-                      autofocus="true"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-validated-input-group-form-input
-                      name="password"
-                      :label="$t('message.password')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-lock"
-                      type="password"
-                      autcomplete="currentpassword"
-                      v-model="input.password"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-row style="margin-bottom: 1rem">
-                      <b-col cols="6" v-show="showLoginForm">
-                        <b-button
-                          variant="primary"
-                          type="submit"
-                          class="px-4"
-                          >{{ $t('message.login') }}</b-button
-                        >
-                      </b-col>
-                      <b-col cols="6" v-show="oidcAvailable">
-                        <b-button
-                          :style="{ float: showLoginForm ? 'right' : 'none' }"
-                          v-on:click="oidcLogin()"
-                        >
-                          <span v-if="oidcCheckLoginButtonTextSetted()">{{
-                            oidcLoginButtonText()
-                          }}</span>
-                          <img
-                            alt="OpenID Logo"
-                            src="@/assets/img/openid-logo.svg"
-                            width="60px"
-                            v-else
-                          />
-                        </b-button>
-                      </b-col>
-                    </b-row>
-                    <b-link
-                      v-show="oidcAvailable && !showLoginForm"
-                      v-on:click="showLoginForm = true"
-                      >{{ $t('message.login_more_options') }}</b-link
-                    >
-                  </b-form>
-                </validation-observer>
-              </b-card-body>
-            </b-card>
-            <b-card
-              no-body
-              class="text-white bg-grey-900 py-5 d-md-down-none"
-              style="width: 44%"
-            >
-              <b-card-body class="text-center">
-                <div>
-                  <img
-                    src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
-                    width="100%"
-                  />
-                </div>
-              </b-card-body>
-            </b-card>
-          </b-card-group>
-        </b-col>
-      </b-row>
+  <QingzhuiAuthLayout slogan>
+    <template #notice>
+      <aside
+        v-if="isWelcomeMessage && welcomeMessage"
+        class="qz-welcome-message"
+      >
+        <div v-html="welcomeMessage" />
+      </aside>
+    </template>
+    <div class="qz-auth-form-icon">
+      <i class="fa fa-lock" aria-hidden="true" />
     </div>
-    <informational-modal v-bind:message="loginError" />
-  </div>
+    <p class="qz-eyebrow" lang="en">ACCOUNT ACCESS</p>
+    <h2 id="login-title">{{ $t('message.login') }}</h2>
+    <p class="qz-form-description">{{ $t('message.login_desc') }}</p>
+    <validation-observer tag="div" v-slot="{ passes }">
+      <b-form
+        novalidate
+        @submit.prevent.stop="passes(login)"
+        aria-labelledby="login-title"
+        :aria-busy="isSubmitting"
+      >
+        <b-validated-input-group-form-input
+          v-show="showLoginForm"
+          id="username"
+          :label="$t('message.username')"
+          input-group-size="mb-3"
+          rules="required"
+          mode="passive"
+          icon="icon-user"
+          type="text"
+          autocomplete="username"
+          v-model="input.username"
+          autofocus="true"
+          lazy="true"
+        />
+        <b-validated-input-group-form-input
+          v-show="showLoginForm"
+          id="password"
+          :label="$t('message.password')"
+          input-group-size="mb-3"
+          rules="required"
+          mode="passive"
+          icon="icon-lock"
+          type="password"
+          autocomplete="current-password"
+          v-model="input.password"
+          lazy="true"
+        />
+        <b-button
+          v-show="showLoginForm"
+          block
+          variant="primary"
+          type="submit"
+          class="qz-auth-submit"
+          :disabled="isSubmitting"
+        >
+          <b-spinner
+            v-if="isSubmitting"
+            small
+            aria-hidden="true"
+            class="mr-2"
+          />
+          {{ $t('message.login') }}
+          <i
+            v-if="!isSubmitting"
+            class="fa fa-arrow-right"
+            aria-hidden="true"
+          />
+        </b-button>
+        <b-button
+          v-if="oidcAvailable"
+          block
+          :variant="showLoginForm ? 'outline-primary' : 'primary'"
+          class="qz-auth-submit"
+          @click="oidcLogin()"
+        >
+          <span v-if="oidcCheckLoginButtonTextSetted()">{{
+            oidcLoginButtonText()
+          }}</span>
+          <img
+            v-else
+            alt="OpenID"
+            src="@/assets/img/openid-logo.svg"
+            width="72"
+          />
+        </b-button>
+        <b-button
+          v-if="oidcAvailable && !showLoginForm"
+          block
+          variant="link"
+          class="mt-3"
+          @click="showLoginForm = true"
+        >
+          {{ $t('message.login_more_options') }}
+        </b-button>
+      </b-form>
+    </validation-observer>
+    <template #modals>
+      <informational-modal :message="loginError" />
+    </template>
+  </QingzhuiAuthLayout>
 </template>
 
 <script>
@@ -112,10 +116,12 @@ const qs = require('querystring');
 import common from '../../shared/common';
 import * as permissions from '../../shared/permissions';
 import DOMPurify from 'dompurify';
+import QingzhuiAuthLayout from '@/qingzhui/AuthLayout.vue';
 
 export default {
-  name: 'Login',
+  name: 'QingzhuiLogin',
   components: {
+    QingzhuiAuthLayout,
     InformationalModal,
     BValidatedInputGroupFormInput,
     ValidationObserver,
@@ -125,6 +131,7 @@ export default {
       isWelcomeMessage: true,
       welcomeMessage: '',
       loginError: '',
+      isSubmitting: false,
       input: {
         username: '',
         password: '',
@@ -166,6 +173,8 @@ export default {
   },
   methods: {
     login() {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
       const url = this.$api.BASE_URL + '/' + this.$api.URL_LOGIN;
       const requestBody = {
         username: this.input.username,
@@ -186,6 +195,7 @@ export default {
           }
         })
         .catch((err) => {
+          if (!err.response) return;
           if (err.response.status === 401) {
             if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
               this.$router.replace({
@@ -200,6 +210,9 @@ export default {
             this.$bvModal.show('modal-informational');
             this.loginError = this.$t('message.login_forbidden');
           }
+        })
+        .finally(() => {
+          this.isSubmitting = false;
         });
     },
     fetchAndCheckPermissions(token, redirectTo) {

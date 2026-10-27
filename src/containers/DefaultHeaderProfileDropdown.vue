@@ -2,6 +2,8 @@
   <AppHeaderDropdown right no-caret>
     <template slot="header">
       <i class="fa fa-user-circle-o" style="font-size: 1.6em"></i>
+      <span class="qz-header-user">{{ user }}</span>
+      <i class="fa fa-angle-down qz-header-chevron" aria-hidden="true" />
     </template>
     <template slot="dropdown">
       <b-dropdown-header boundary="viewport" tag="div" class="text-center">
@@ -82,7 +84,7 @@ export default {
 
 <style>
 .app-header .navbar-nav .dropdown-menu-right {
-  right: inherit;
+  right: 0;
 }
 
 /* Remove default padding inherited from b-dropdown-form. */

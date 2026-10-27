@@ -1,24 +1,24 @@
 <template>
-  <div class="app flex-row align-items-center">
-    <div class="container">
-      <b-row class="justify-content-center">
-        <b-col md="6">
-          <div class="clearfix">
-            <h1 class="float-left display-3 mr-4">404</h1>
-            <h4 class="pt-3">{{ $t('404.heading') }}</h4>
-            <p class="text-muted">{{ $t('404.message') }}</p>
-          </div>
-          <b-button block variant="outline-primary" @click="$router.back()">{{
-            $t('404.action')
-          }}</b-button>
-        </b-col>
-      </b-row>
+  <QingzhuiAuthLayout error>
+    <div class="qz-error-code" aria-hidden="true">404</div>
+    <h1>{{ $t('404.heading') }}</h1>
+    <p class="qz-form-description">{{ $t('404.message') }}</p>
+    <div class="qz-error-actions">
+      <b-button variant="primary" @click="$router.back()">{{
+        $t('404.action')
+      }}</b-button>
+      <b-button variant="outline-primary" to="/dashboard">{{
+        $t('message.home')
+      }}</b-button>
     </div>
-  </div>
+  </QingzhuiAuthLayout>
 </template>
 
 <script>
+import QingzhuiAuthLayout from '@/qingzhui/AuthLayout.vue';
+
 export default {
-  name: 'Page404',
+  name: 'QingzhuiNotFound',
+  components: { QingzhuiAuthLayout },
 };
 </script>

@@ -20,6 +20,7 @@ import VueToastr from 'vue-toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
+import brand from './qingzhui/brand';
 import { getContextPath } from './shared/utils';
 
 Vue.use(BootstrapVue);
@@ -32,7 +33,7 @@ Vue.use(VueToastr, {
   defaultCloseOnHover: false,
 });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
-Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
+Vue.use(VuePageTitle, { prefix: `${brand.platformName} ·`, router });
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
